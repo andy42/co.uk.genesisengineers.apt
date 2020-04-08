@@ -1,6 +1,9 @@
 package resources;
 
+import referenceFile.ReferenceFileFactory;
+
 import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +12,6 @@ public class ResourceTree {
     private File resourcesDir;
 
     private List<DirectoryNode> directoryList = new ArrayList<>();
-    private boolean isPrefixFileType = true;
 
     public ResourceTree(File resourcesDir){
         this.resourcesDir = resourcesDir;
@@ -28,38 +30,47 @@ public class ResourceTree {
         }
     }
 
-    public void log(){
-//        for(DirectoryNode directoryNode : directoryList){
-//            directoryNode.log();
-//        }
-        //System.out.print(createResourceFile());
-        System.out.print(createAssetFile());
-
-    }
-
-    public String createResourceFile(){
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("public final class R {\n");
-
+    public void setReferenceIds(ReferenceFileFactory referenceFileFactory){
         for(DirectoryNode directoryNode : directoryList){
-            //stringBuilder.append(directoryNode.getType()+"\n");
-
-
-            directoryNode.createResourceFile(stringBuilder,isPrefixFileType);
+            directoryNode.setReferenceIds(referenceFileFactory);
         }
-        stringBuilder.append("}\n");
-        return stringBuilder.toString();
     }
+
+    public void copyFiles(Path sourceRoot, Path destinationRoot){
+        for(DirectoryNode directoryNode : directoryList){
+            switch (directoryNode.getType()){
+                case "layouts":
+                    //Skip layouts dir, will be handled by LayoutParser
+                    break;
+                default:
+                    directoryNode.copyFiles(sourceRoot, destinationRoot);
+            }
+        }
+    }
+
+    public void log(){
+        for(DirectoryNode directoryNode : directoryList){
+            directoryNode.log();
+        }
+    }
+
+    public DirectoryNode getDirectoryNode(String directoryName){
+        for(DirectoryNode directoryNode : directoryList){
+            if(directoryNode.getType().compareTo(directoryName) == 0) {
+                return directoryNode;
+            }
+        }
+        return null;
+    }
+
     public String createAssetFile(){
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("{\n");
         stringBuilder.append("  \"files\":[\n");
 
         for(DirectoryNode directoryNode : directoryList){
-            //stringBuilder.append(directoryNode.getType()+"\n");
-            directoryNode.createAssetFile(stringBuilder, isPrefixFileType);
+            directoryNode.createAssetFile(stringBuilder);
         }
-        ;
         stringBuilder.deleteCharAt(stringBuilder.length()-1);
 
         stringBuilder.append("\n  ]\n");

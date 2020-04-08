@@ -1,23 +1,45 @@
+import layout.LayoutParser;
+import referenceFile.ReferenceFileFactory;
 import resources.ResourceTree;
+import util.FileLoader;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Main {
     public static void main (String[] args) {
         System.out.println("Working Directory = " +
                 System.getProperty("user.dir"));
 
-        File resourcesDir = getSubRootFolder(getRootDir(), "resources");
+        File resDir = getSubRootFolder(getRootDir(), "res");
 
+        if(args.length == 0){
+            throw new RuntimeException("args1 most be the java package Name e.g \"com.test.game\"");
+        }
+        String packageName = args[0];
 
-        ResourceTree resourceTree = new ResourceTree(resourcesDir);
+        ResourceTree resourceTree = new ResourceTree(resDir);
         resourceTree.explorePath();
-        resourceTree.log();
 
-        createJavaRClass(getRootDir(),resourceTree.createResourceFile());
+        ReferenceFileFactory referenceFileFactory = new ReferenceFileFactory();
+        resourceTree.setReferenceIds(referenceFileFactory);
+
+        Path resourcesPath = Paths.get(System.getProperty("user.dir"), "/src/main/resources");
+        FileLoader.deleteDir(resourcesPath);
+        FileLoader.createDir(resourcesPath);
+
+        Path resPath = Paths.get(System.getProperty("user.dir"), "/src/main/res");
+        resourceTree.copyFiles(resPath, resourcesPath);
+
+
+        LayoutParser layoutParser = new LayoutParser(resourceTree.getDirectoryNode("layouts"), referenceFileFactory);
+        layoutParser.parse(resPath, resourcesPath);
+
+        createJavaRClass(getRootDir(), referenceFileFactory.createReferenceClass(packageName));
         createAssetFile(getRootDir(),resourceTree.createAssetFile());
     }
 
@@ -58,6 +80,3 @@ public class Main {
         writeDataTOFile(rClassFile, data);
     }
 }
-
-
-//  src/main/resources/layouts

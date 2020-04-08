@@ -1,8 +1,11 @@
 package resources;
 
 import com.google.common.io.Files;
+import util.FileLoader;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class FileNode {
     private int id;
@@ -48,23 +51,31 @@ public class FileNode {
     }
 
     public void log(){
-        //System.out.print(type+": "+file.getAbsolutePath()+"\n");
         System.out.print(type+" : "+name+" : "+fileType+"\n");
     }
 
-    private String createName(boolean prefix_file_type){
-        return name+((prefix_file_type) ? "_"+fileType : "");
+    public String createRIdName(){
+        return name+ "_"+fileType;
     }
 
-    public String createResourceString(boolean prefix_file_type){
-        return "public static final int "+createName(prefix_file_type)+" = "+id+";";
+    public String getPathString(){
+        return path;
     }
 
+    public Path getPath(Path rootDir){
+        return Paths.get(rootDir.toString(),path);
+    }
 
-    public String createAssetString(boolean prefix_file_type){
+    public void copyFile(Path sourceRoot, Path destinationRoot){
+        Path source = Paths.get(sourceRoot.toString(), path);
+        Path destination = Paths.get(destinationRoot.toString(), path);
+        FileLoader.copyFile(source, destination);
+    }
+
+    public String createAssetString(){
         String indentation = "      ";
         return  "\n"+indentation+"{\n" +
-                indentation+"   \"name\" : \""+createName(prefix_file_type)+"\",\n"+
+                indentation+"   \"name\" : \""+createRIdName()+"\",\n"+
                 indentation+"   \"id\" : "+id+",\n"+
                 indentation+"   \"filePath\" : \""+path+"\",\n"+
                 indentation+"   \"type\" : \""+type+"\"\n"+

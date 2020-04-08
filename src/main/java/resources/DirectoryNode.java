@@ -1,8 +1,12 @@
 package resources;
 
+import referenceFile.ReferenceFileFactory;
+import util.FileLoader;
+
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class DirectoryNode {
@@ -24,6 +28,15 @@ public class DirectoryNode {
             this.path = parentPath+"/"+file.getName();
         }
 
+    }
+
+    public void setReferenceIds(ReferenceFileFactory referenceFileFactory){
+        for(FileNode fileNode : fileList){
+            referenceFileFactory.addId(path, fileNode.createRIdName());
+        }
+        for(DirectoryNode directoryNode : directoryList){
+            directoryNode.setReferenceIds(referenceFileFactory);
+        }
     }
 
     private String createTabs(int count){
@@ -55,8 +68,16 @@ public class DirectoryNode {
         return id;
     }
 
-    public String getType () {
+    public String getPath() {
+        return path;
+    }
+
+    public String getType() {
         return type;
+    }
+
+    public List<FileNode> getFileList() {
+        return fileList;
     }
 
     public void log(){
@@ -68,27 +89,30 @@ public class DirectoryNode {
         }
     }
 
-    public void createResourceFile(StringBuilder stringBuilder, boolean isPrefixFileType){
-
-        String indentation = createTabs(depth);
-        stringBuilder.append(indentation+"public static final class "+file.getName()+" {\n");
-        for(FileNode fileNode : fileList){
-            stringBuilder.append(indentation+"  "+fileNode.createResourceString(isPrefixFileType)+"\n");
-        }
-        for(DirectoryNode directoryNode : directoryList){
-            directoryNode.createResourceFile(stringBuilder, isPrefixFileType);
-        }
-
-        stringBuilder.append(indentation+"}\n");
+    public void createDirAtRootDestination(Path destinationRoot){
+        Path path = Paths.get(destinationRoot.toString(),getPath());
+        FileLoader.createDir(path);
     }
 
-    public void createAssetFile(StringBuilder stringBuilder, boolean isPrefixFileType){
+
+    public void copyFiles(Path sourceRoot, Path destinationRoot){
+        createDirAtRootDestination(destinationRoot);
+
+        for(DirectoryNode directoryNode : directoryList){
+            directoryNode.copyFiles(sourceRoot, destinationRoot);
+        }
+        for(FileNode fileNode : fileList){
+            fileNode.copyFile(sourceRoot, destinationRoot);
+        }
+    }
+
+    public void createAssetFile(StringBuilder stringBuilder){
 
         for(FileNode fileNode : fileList){
-            stringBuilder.append(fileNode.createAssetString(isPrefixFileType));
+            stringBuilder.append(fileNode.createAssetString());
         }
         for(DirectoryNode directoryNode : directoryList){
-            directoryNode.createAssetFile(stringBuilder, isPrefixFileType);
+            directoryNode.createAssetFile(stringBuilder);
         }
     }
 
