@@ -40,7 +40,7 @@ public class Main {
         layoutParser.parse(resPath, resourcesPath);
 
         createJavaRClass(getRootDir(), referenceFileFactory.createReferenceClass(packageName));
-        createAssetFile(getRootDir(),resourceTree.createAssetFile());
+        createAssetFile(getRootDir(),resourceTree.createAssetFile(referenceFileFactory));
     }
 
     private static File getRootDir(){

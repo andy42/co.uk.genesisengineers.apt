@@ -32,7 +32,8 @@ public class DirectoryNode {
 
     public void setReferenceIds(ReferenceFileFactory referenceFileFactory){
         for(FileNode fileNode : fileList){
-            referenceFileFactory.addId(path, fileNode.createRIdName());
+            int newId = referenceFileFactory.addId(path, fileNode.createRIdName());
+            fileNode.setId(newId);
         }
         for(DirectoryNode directoryNode : directoryList){
             directoryNode.setReferenceIds(referenceFileFactory);
@@ -106,13 +107,13 @@ public class DirectoryNode {
         }
     }
 
-    public void createAssetFile(StringBuilder stringBuilder){
+    public void createAssetFile(StringBuilder stringBuilder, ReferenceFileFactory referenceFileFactory){
 
         for(FileNode fileNode : fileList){
-            stringBuilder.append(fileNode.createAssetString());
+            stringBuilder.append(fileNode.createAssetString(referenceFileFactory));
         }
         for(DirectoryNode directoryNode : directoryList){
-            directoryNode.createAssetFile(stringBuilder);
+            directoryNode.createAssetFile(stringBuilder, referenceFileFactory);
         }
     }
 

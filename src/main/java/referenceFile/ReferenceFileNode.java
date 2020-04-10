@@ -9,7 +9,8 @@ public class ReferenceFileNode {
     private Map<String, Integer> idMap= new HashMap();
     private Map<String, ReferenceFileNode> nodeMap= new HashMap();
 
-    public ReferenceFileNode(String nodeName, int depth){
+    public ReferenceFileNode(String nodeName, int depth, int typeId){
+        idMap.put("TYPE", typeId);
         this.nodeName = nodeName;
         this.depth = depth;
     }
@@ -30,20 +31,12 @@ public class ReferenceFileNode {
         return nodeMap.get(name);
     }
 
-    public ReferenceFileNode getOrCreateNode(String name, int depth){
-        if(nodeMap.containsKey(name)){
-            return nodeMap.get(name);
-        } else {
-            return nodeMap.put(name, new ReferenceFileNode(name, depth));
-        }
-    }
-
     public boolean hasNode(String name){
         return nodeMap.containsKey(name);
     }
 
-    public ReferenceFileNode createNode(String name, int depth){
-        return nodeMap.put(name, new ReferenceFileNode(name, depth));
+    public ReferenceFileNode createNode(String name, int depth, int typeId){
+        return nodeMap.put(name, new ReferenceFileNode(name, depth, typeId));
     }
 
     private String createTabs(int count){

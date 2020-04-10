@@ -19,13 +19,17 @@ public class ReferenceFileFactory {
 
         ReferenceFileNode node = nodeMap.get(nodeName);
         if(node == null) {
-            node = new ReferenceFileNode(nodeName, 1);
+            node = new ReferenceFileNode(nodeName, 1, idIndex++);
             nodeMap.put(nodeName, node);
         }
 
         for(int i=1; i< typeArray.length; i++){
             nodeName = typeArray[i];
-            node = node.getOrCreateNode(nodeName, i+1);
+            if(node.hasNode(nodeName)){
+                node = node.getNode(nodeName);
+            } else {
+                node = node.createNode(nodeName, i+1, idIndex++);
+            }
         }
         return node;
     }

@@ -1,11 +1,13 @@
 package resources;
 
 import com.google.common.io.Files;
+import referenceFile.ReferenceFileFactory;
 import util.FileLoader;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 public class FileNode {
     private int id;
@@ -32,6 +34,10 @@ public class FileNode {
             extension = file.getName().substring(i+1);
         }
         return extension;
+    }
+
+    public void setId(int id){
+        this.id = id;
     }
 
     public String getType () {
@@ -72,13 +78,14 @@ public class FileNode {
         FileLoader.copyFile(source, destination);
     }
 
-    public String createAssetString(){
+    public String createAssetString(ReferenceFileFactory referenceFileFactory){
         String indentation = "      ";
         return  "\n"+indentation+"{\n" +
                 indentation+"   \"name\" : \""+createRIdName()+"\",\n"+
                 indentation+"   \"id\" : "+id+",\n"+
                 indentation+"   \"filePath\" : \""+path+"\",\n"+
-                indentation+"   \"type\" : \""+type+"\"\n"+
+                indentation+"   \"fileType\" : \""+fileType+"\",\n"+
+                indentation+"   \"type\" : \""+referenceFileFactory.getId( type, "TYPE")+"\"\n"+
                 indentation+"},";
     }
 }

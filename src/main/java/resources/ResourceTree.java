@@ -63,13 +63,13 @@ public class ResourceTree {
         return null;
     }
 
-    public String createAssetFile(){
+    public String createAssetFile(ReferenceFileFactory referenceFileFactory){
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("{\n");
         stringBuilder.append("  \"files\":[\n");
 
         for(DirectoryNode directoryNode : directoryList){
-            directoryNode.createAssetFile(stringBuilder);
+            directoryNode.createAssetFile(stringBuilder, referenceFileFactory);
         }
         stringBuilder.deleteCharAt(stringBuilder.length()-1);
 
