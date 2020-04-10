@@ -71,4 +71,23 @@ public class ReferenceFileFactory {
         stringBuilder.append("}\n");
         return stringBuilder.toString();
     }
+
+    //this is takes full string ref "id/test"
+    public Integer resIdLookUp(String ref) {
+        String[] parts = ref.split("/");
+        if(parts.length == 0) return null;
+        String idName = parts[parts.length -1];
+
+        String nodeName = parts[0];
+
+        ReferenceFileNode node = nodeMap.get(nodeName);
+        if(node == null) return null;
+
+        for(int i=1; i< (parts.length -1); i++){
+            nodeName = parts[i];
+            node = node.getNode(nodeName);
+            if(node == null) return null;
+        }
+        return node.getId(idName);
+    }
 }

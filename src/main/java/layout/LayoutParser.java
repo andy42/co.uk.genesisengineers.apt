@@ -18,8 +18,8 @@ import java.nio.file.Paths;
 
 public class LayoutParser {
     private ReferenceFileFactory referenceFileFactory;
-
     private DirectoryNode rootDirectoryNode;
+
     public LayoutParser(DirectoryNode directoryNode, ReferenceFileFactory referenceFileFactory){
         this.rootDirectoryNode = directoryNode;
         this.referenceFileFactory = referenceFileFactory;

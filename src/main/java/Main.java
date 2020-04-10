@@ -1,3 +1,4 @@
+import drawable.DrawableParser;
 import layout.LayoutParser;
 import referenceFile.ReferenceFileFactory;
 import resources.ResourceTree;
@@ -38,6 +39,9 @@ public class Main {
 
         LayoutParser layoutParser = new LayoutParser(resourceTree.getDirectoryNode("layouts"), referenceFileFactory);
         layoutParser.parse(resPath, resourcesPath);
+
+        DrawableParser drawableParser = new DrawableParser(resourceTree.getDirectoryNode("drawables"), referenceFileFactory);
+        drawableParser.parse(resPath, resourcesPath);
 
         createJavaRClass(getRootDir(), referenceFileFactory.createReferenceClass(packageName));
         createAssetFile(getRootDir(),resourceTree.createAssetFile(referenceFileFactory));
