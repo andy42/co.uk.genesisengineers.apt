@@ -1,5 +1,6 @@
 package layout;
 
+import assets.AssetsManager;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -25,7 +26,7 @@ public class LayoutParser {
         this.referenceFileFactory = referenceFileFactory;
     }
 
-    public boolean parse(Path sourceRoot, Path destinationRoot ){
+    public boolean parse(Path sourceRoot, Path destinationRoot, AssetsManager assetsManager, ReferenceFileFactory referenceFileFactory ){
 
         rootDirectoryNode.createDirAtRootDestination(destinationRoot);
 
@@ -35,9 +36,10 @@ public class LayoutParser {
                     parseFile(
                             fileNode.getPath(sourceRoot),
                             Paths.get(destinationRoot.toString(), fileNode.getPathString()));
+                    fileNode.addToAssetsManager(assetsManager, referenceFileFactory);
                     break;
                 case "xsd":
-                    fileNode.copyFile(sourceRoot, destinationRoot);
+                    fileNode.copyFile(sourceRoot, destinationRoot, assetsManager, referenceFileFactory);
                     break;
             }
         }
@@ -67,7 +69,16 @@ public class LayoutParser {
         final String id = element.getAttributeValue( "id");
 
         for(Attribute attribute : element.getAttributes()){
-            attribute.getValue();
+            String value = attribute.getValue();
+            if(value != null && value.length() > 0 && value.charAt(0) == '@'){
+                value = value.substring(1);
+                Integer resId = referenceFileFactory.resIdLookUp(value);
+                if(resId == null){
+                    System.out.print("ref not found : "+value);
+                    continue;
+                }
+                attribute.setValue(Integer.toString(resId));
+            }
         }
 
         if(id != null){

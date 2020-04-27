@@ -1,5 +1,6 @@
 package resources;
 
+import assets.AssetsManager;
 import referenceFile.ReferenceFileFactory;
 
 import java.io.File;
@@ -32,18 +33,25 @@ public class ResourceTree {
 
     public void setReferenceIds(ReferenceFileFactory referenceFileFactory){
         for(DirectoryNode directoryNode : directoryList){
+            switch (directoryNode.getType()){
+                case "values":
+                    continue;
+            }
             directoryNode.setReferenceIds(referenceFileFactory);
         }
     }
 
-    public void copyFiles(Path sourceRoot, Path destinationRoot){
+    public void copyFiles(Path sourceRoot, Path destinationRoot, AssetsManager assetsManager, ReferenceFileFactory referenceFileFactory){
         for(DirectoryNode directoryNode : directoryList){
             switch (directoryNode.getType()){
                 case "layouts":
                     //Skip layouts dir, will be handled by LayoutParser
                     break;
+                case "values":
+                    //Skip values dir, will be handled by ColorParser
+                    break;
                 default:
-                    directoryNode.copyFiles(sourceRoot, destinationRoot);
+                    directoryNode.copyFiles(sourceRoot, destinationRoot, assetsManager, referenceFileFactory);
             }
         }
     }

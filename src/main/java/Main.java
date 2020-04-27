@@ -1,8 +1,10 @@
+import assets.AssetsManager;
 import drawable.DrawableParser;
 import layout.LayoutParser;
 import referenceFile.ReferenceFileFactory;
 import resources.ResourceTree;
 import util.FileLoader;
+import values.ValuesParser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,6 +28,8 @@ public class Main {
         ResourceTree resourceTree = new ResourceTree(resDir);
         resourceTree.explorePath();
 
+        AssetsManager assetsManager = new AssetsManager();
+
         ReferenceFileFactory referenceFileFactory = new ReferenceFileFactory();
         resourceTree.setReferenceIds(referenceFileFactory);
 
@@ -34,17 +38,21 @@ public class Main {
         FileLoader.createDir(resourcesPath);
 
         Path resPath = Paths.get(System.getProperty("user.dir"), "/src/main/res");
-        resourceTree.copyFiles(resPath, resourcesPath);
+        resourceTree.copyFiles(resPath, resourcesPath, assetsManager, referenceFileFactory);
 
-
-        LayoutParser layoutParser = new LayoutParser(resourceTree.getDirectoryNode("layouts"), referenceFileFactory);
-        layoutParser.parse(resPath, resourcesPath);
+        ValuesParser valuesParser = new ValuesParser(resourceTree.getDirectoryNode("values"), referenceFileFactory,assetsManager);
+        valuesParser.parse(resPath, resourcesPath);
 
         DrawableParser drawableParser = new DrawableParser(resourceTree.getDirectoryNode("drawables"), referenceFileFactory);
         drawableParser.parse(resPath, resourcesPath);
 
+        LayoutParser layoutParser = new LayoutParser(resourceTree.getDirectoryNode("layouts"), referenceFileFactory);
+        layoutParser.parse(resPath, resourcesPath, assetsManager, referenceFileFactory);
+
+
         createJavaRClass(getRootDir(), referenceFileFactory.createReferenceClass(packageName));
-        createAssetFile(getRootDir(),resourceTree.createAssetFile(referenceFileFactory));
+
+        assetsManager.createAssetFile(resourcesPath);
     }
 
     private static File getRootDir(){

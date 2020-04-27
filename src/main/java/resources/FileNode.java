@@ -1,5 +1,7 @@
 package resources;
 
+import assets.Asset;
+import assets.AssetsManager;
 import com.google.common.io.Files;
 import referenceFile.ReferenceFileFactory;
 import util.FileLoader;
@@ -72,10 +74,24 @@ public class FileNode {
         return Paths.get(rootDir.toString(),path);
     }
 
-    public void copyFile(Path sourceRoot, Path destinationRoot){
+    public void copyFile(Path sourceRoot, Path destinationRoot, AssetsManager assetsManager, ReferenceFileFactory referenceFileFactory){
         Path source = Paths.get(sourceRoot.toString(), path);
         Path destination = Paths.get(destinationRoot.toString(), path);
         FileLoader.copyFile(source, destination);
+
+        addToAssetsManager(assetsManager, referenceFileFactory);
+    }
+
+    public void addToAssetsManager(AssetsManager assetsManager, ReferenceFileFactory referenceFileFactory){
+        assetsManager.addAsset(
+                new Asset.AssetBuilder()
+                        .setName(createRIdName())
+                        .setId(Integer.toString(id))
+                        .setFilePath(path)
+                        .setFileType(fileType)
+                        .setType(Integer.toString(referenceFileFactory.getId( type, "TYPE")))
+                        .build()
+        );
     }
 
     public String createAssetString(ReferenceFileFactory referenceFileFactory){

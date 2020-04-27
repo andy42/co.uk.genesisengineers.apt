@@ -1,5 +1,6 @@
 package resources;
 
+import assets.AssetsManager;
 import referenceFile.ReferenceFileFactory;
 import util.FileLoader;
 
@@ -96,14 +97,14 @@ public class DirectoryNode {
     }
 
 
-    public void copyFiles(Path sourceRoot, Path destinationRoot){
+    public void copyFiles(Path sourceRoot, Path destinationRoot, AssetsManager assetsManager , ReferenceFileFactory referenceFileFactory){
         createDirAtRootDestination(destinationRoot);
 
         for(DirectoryNode directoryNode : directoryList){
-            directoryNode.copyFiles(sourceRoot, destinationRoot);
+            directoryNode.copyFiles(sourceRoot, destinationRoot, assetsManager, referenceFileFactory);
         }
         for(FileNode fileNode : fileList){
-            fileNode.copyFile(sourceRoot, destinationRoot);
+            fileNode.copyFile(sourceRoot, destinationRoot, assetsManager, referenceFileFactory);
         }
     }
 
