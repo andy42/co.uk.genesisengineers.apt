@@ -51,6 +51,9 @@ public class ReferenceFileFactory {
 
     public int addId(String path, String name){
         ReferenceFileNode node = getOrCreateNode(path);
+        if(node.getId(name) != null){
+            return node.getId(name);
+        }
         node.addId(name,idIndex);
         return idIndex++;
     }
