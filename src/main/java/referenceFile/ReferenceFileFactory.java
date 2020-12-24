@@ -63,17 +63,30 @@ public class ReferenceFileFactory {
         return node.getId(name);
     }
 
-    public String createReferenceClass(String packageName){
+    public String createJavaReferenceClass(String packageName){
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("package "+packageName+";\n\n");
         stringBuilder.append("public final class R {\n");
 
         for(ReferenceFileNode referenceFileNode : nodeMap.values()){
-            referenceFileNode.createReferenceClass(stringBuilder);
+            referenceFileNode.createJavaReferenceClass(stringBuilder);
         }
         stringBuilder.append("}\n");
         return stringBuilder.toString();
     }
+
+    public String createKotlinReferenceClass(String packageName){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("package "+packageName+";\n\n");
+        stringBuilder.append("class R {\n");
+
+        for(ReferenceFileNode referenceFileNode : nodeMap.values()){
+            referenceFileNode.createKotlinReferenceClass(stringBuilder);
+        }
+        stringBuilder.append("}\n");
+        return stringBuilder.toString();
+    }
+
 
     //this is takes full string ref "id/test"
     public Integer resIdLookUp(String ref) {

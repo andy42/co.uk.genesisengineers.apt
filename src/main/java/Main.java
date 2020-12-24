@@ -4,6 +4,7 @@ import layout.LayoutParser;
 import referenceFile.ReferenceFileFactory;
 import resources.ResourceTree;
 import util.FileLoader;
+import util.Logger;
 import values.ValuesParser;
 
 import java.io.File;
@@ -15,6 +16,9 @@ import java.nio.file.Paths;
 
 public class Main {
     public static void main (String[] args) {
+
+        boolean useJava = false;
+
         System.out.println("Working Directory = " +
                 System.getProperty("user.dir"));
 
@@ -49,8 +53,11 @@ public class Main {
         LayoutParser layoutParser = new LayoutParser(resourceTree.getDirectoryNode("layouts"), referenceFileFactory);
         layoutParser.parse(resPath, resourcesPath, assetsManager, referenceFileFactory);
 
-
-        createJavaRClass(getRootDir(), referenceFileFactory.createReferenceClass(packageName));
+        if(useJava) {
+            createJavaRClass(getRootDir(), referenceFileFactory.createJavaReferenceClass(packageName));
+        } else {
+            createKotlinRClass(getRootDir(), referenceFileFactory.createKotlinReferenceClass(packageName));
+        }
 
         assetsManager.createAssetFile(resourcesPath);
     }
@@ -66,6 +73,19 @@ public class Main {
 
     private static File getGeneratedJavaDir(File rootDir,String fileName ){
         File resourcesDir = new File(rootDir.getAbsolutePath()+"/build/generated/java/"+fileName);
+        if(resourcesDir.exists() == false){
+            Logger.error("/build/generated/java/ does not exist");
+        }
+        //TODO: create folders if they do not exist
+        return resourcesDir;
+    }
+
+    private static File getGeneratedKotlinDir(File rootDir,String fileName ) {
+        File resourcesDir = new File(rootDir.getAbsolutePath()+"/build/generated/kotlin/"+fileName);
+        if(resourcesDir.exists() == false){
+            Logger.error("/build/generated/kotlin/ does not exist");
+        }
+        //TODO: create folders if they do not exist
         return resourcesDir;
     }
 
@@ -84,6 +104,11 @@ public class Main {
 
     private static void createJavaRClass(File rootDir, String data){
         File rClassFile = getGeneratedJavaDir(rootDir, "R.java");
+        writeDataTOFile(rClassFile, data);
+    }
+
+    private static void createKotlinRClass(File rootDir, String data){
+        File rClassFile = getGeneratedKotlinDir(rootDir, "R.kt");
         writeDataTOFile(rClassFile, data);
     }
 

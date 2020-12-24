@@ -29,6 +29,7 @@ public class ValuesParser {
     private final String TYPE_COLOR_KEY = "color";
     private final String TYPE_COLOuR_KEY = "colour";
     private final String TYPE_ID = "id";
+    private final String TYPE_COMPONENT = "component";
 
 
     public ValuesParser(DirectoryNode directoryNode, ReferenceFileFactory referenceFileFactory, AssetsManager assetsManager){
@@ -85,13 +86,21 @@ public class ValuesParser {
             case TYPE_ID:
                 parseId(jsonObject);
                 break;
+            case TYPE_COMPONENT:
+                parseComponent(jsonObject);
+                break;
         }
 
     }
 
+    private void parseComponent(JSONObject jsonObject){
+        String idName = jsonObject.getString(VALUE_NAME);
+        referenceFileFactory.addId(TYPE_COMPONENT, idName);
+    }
+
     private void parseId(JSONObject jsonObject){
         String idName = jsonObject.getString(VALUE_NAME);
-        referenceFileFactory.addId("id", idName);
+        referenceFileFactory.addId(ID_KEY, idName);
     }
 
     private void parseColor(JSONObject jsonObject){

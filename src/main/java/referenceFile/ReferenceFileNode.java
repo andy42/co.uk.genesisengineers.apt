@@ -47,7 +47,7 @@ public class ReferenceFileNode {
         return stringBuilder.toString();
     }
 
-    public void createReferenceClass(StringBuilder stringBuilder){
+    public void createJavaReferenceClass(StringBuilder stringBuilder){
 
         String indentation = createTabs(depth);
         stringBuilder.append(indentation+"public static final class "+nodeName+" {\n");
@@ -57,7 +57,23 @@ public class ReferenceFileNode {
         }
 
         for( String key : nodeMap.keySet()){
-            nodeMap.get(key).createReferenceClass(stringBuilder);
+            nodeMap.get(key).createJavaReferenceClass(stringBuilder);
+        }
+
+        stringBuilder.append(indentation+"}\n");
+    }
+
+    public void createKotlinReferenceClass(StringBuilder stringBuilder){
+
+        String indentation = createTabs(depth);
+        stringBuilder.append("\n"+indentation+"object  "+nodeName+" {\n");
+
+        for( String key : idMap.keySet()){
+            stringBuilder.append(indentation+"  "+"val "+key+" = "+idMap.get(key)+"\n");
+        }
+
+        for( String key : nodeMap.keySet()){
+            nodeMap.get(key).createJavaReferenceClass(stringBuilder);
         }
 
         stringBuilder.append(indentation+"}\n");
