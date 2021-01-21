@@ -1,8 +1,10 @@
-package resources;
+package co.uk.genesisengineers.apt.resources;
 
-import assets.AssetsManager;
-import referenceFile.ReferenceFileFactory;
-import util.FileLoader;
+import co.uk.genesisengineers.apt.assets.Asset;
+import co.uk.genesisengineers.apt.assets.AssetsManager;
+import co.uk.genesisengineers.apt.referenceFile.ReferenceFileFactory;
+import co.uk.genesisengineers.apt.util.FileLoader;
+import co.uk.genesisengineers.apt.util.Logger;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -15,8 +17,11 @@ public class DirectoryNode {
     private String type;
     private int depth;
     private String path;
+    private int pathRefId = 0;
     private List<DirectoryNode> directoryList = new ArrayList<>();
     private List<FileNode> fileList = new ArrayList<>();
+    
+    static final String PATH_NAME = "path";
 
     public DirectoryNode(File file, String parentPath, String type, int depth){
         this.file = file;
@@ -29,9 +34,13 @@ public class DirectoryNode {
             this.path = parentPath+"/"+file.getName();
         }
 
+        if(file.getName().equalsIgnoreCase(DirectoryNode.PATH_NAME)){
+            Logger.error("do not use folder name path as this is used to specify path in assets :  "+path);
+        }
     }
 
     public void setReferenceIds(ReferenceFileFactory referenceFileFactory){
+        pathRefId = referenceFileFactory.addId(path, PATH_NAME);
         for(FileNode fileNode : fileList){
             int newId = referenceFileFactory.addId(path, fileNode.createRIdName());
             fileNode.setId(newId);
@@ -96,9 +105,23 @@ public class DirectoryNode {
         FileLoader.createDir(path);
     }
 
+    public void addToAssetsManager(AssetsManager assetsManager, ReferenceFileFactory referenceFileFactory){
+        assetsManager.addAsset(
+                new Asset.AssetBuilder()
+                        .setName(PATH_NAME)
+                        .setId(Integer.toString(pathRefId))
+                        .setFilePath(path)
+                        .setFileType(PATH_NAME)
+                        .setType(Integer.toString(referenceFileFactory.getId( type, "TYPE")))
+                        .build()
+        );
+    }
+
 
     public void copyFiles(Path sourceRoot, Path destinationRoot, AssetsManager assetsManager , ReferenceFileFactory referenceFileFactory){
         createDirAtRootDestination(destinationRoot);
+
+        addToAssetsManager(assetsManager, referenceFileFactory);
 
         for(DirectoryNode directoryNode : directoryList){
             directoryNode.copyFiles(sourceRoot, destinationRoot, assetsManager, referenceFileFactory);
@@ -107,9 +130,10 @@ public class DirectoryNode {
             fileNode.copyFile(sourceRoot, destinationRoot, assetsManager, referenceFileFactory);
         }
     }
+    
 
     public void createAssetFile(StringBuilder stringBuilder, ReferenceFileFactory referenceFileFactory){
-
+                
         for(FileNode fileNode : fileList){
             stringBuilder.append(fileNode.createAssetString(referenceFileFactory));
         }

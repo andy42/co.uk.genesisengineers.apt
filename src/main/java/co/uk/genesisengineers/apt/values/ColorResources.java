@@ -1,11 +1,11 @@
-package values;
+package co.uk.genesisengineers.apt.values;
 
-import assets.Asset;
-import assets.AssetsManager;
+import co.uk.genesisengineers.apt.assets.Asset;
+import co.uk.genesisengineers.apt.assets.AssetsManager;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import referenceFile.ReferenceFileFactory;
-import util.Logger;
+import co.uk.genesisengineers.apt.referenceFile.ReferenceFileFactory;
+import co.uk.genesisengineers.apt.util.Logger;
 
 import java.io.BufferedWriter;
 import java.nio.charset.Charset;

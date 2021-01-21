@@ -1,4 +1,4 @@
-package referenceFile;
+package co.uk.genesisengineers.apt.referenceFile;
 
 import java.util.HashMap;
 import java.util.Map;

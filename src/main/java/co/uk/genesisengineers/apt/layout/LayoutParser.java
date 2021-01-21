@@ -1,6 +1,6 @@
-package layout;
+package co.uk.genesisengineers.apt.layout;
 
-import assets.AssetsManager;
+import co.uk.genesisengineers.apt.assets.AssetsManager;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -8,9 +8,9 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
-import referenceFile.ReferenceFileFactory;
-import resources.DirectoryNode;
-import resources.FileNode;
+import co.uk.genesisengineers.apt.referenceFile.ReferenceFileFactory;
+import co.uk.genesisengineers.apt.resources.DirectoryNode;
+import co.uk.genesisengineers.apt.resources.FileNode;
 
 import java.io.*;
 import java.nio.file.Files;

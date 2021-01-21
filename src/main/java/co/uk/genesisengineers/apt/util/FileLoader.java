@@ -1,4 +1,4 @@
-package util;
+package co.uk.genesisengineers.apt.util;
 
 import org.apache.commons.io.FileUtils;
 

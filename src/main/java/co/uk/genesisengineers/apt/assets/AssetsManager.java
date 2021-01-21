@@ -1,6 +1,6 @@
-package assets;
+package co.uk.genesisengineers.apt.assets;
 
-import util.Logger;
+import co.uk.genesisengineers.apt.util.Logger;
 
 import java.io.BufferedWriter;
 import java.nio.charset.Charset;

@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'java-library-distribution'
 }
 
 group 'co.uk.genesisengine'
@@ -9,6 +10,17 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'co.uk.genesisengineers.apt.Main'
+        )
+    }
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
 
 dependencies {

@@ -1,15 +1,15 @@
-package resources;
+package co.uk.genesisengineers.apt.resources;
 
-import assets.Asset;
-import assets.AssetsManager;
+import co.uk.genesisengineers.apt.assets.Asset;
+import co.uk.genesisengineers.apt.assets.AssetsManager;
+import co.uk.genesisengineers.apt.util.Logger;
 import com.google.common.io.Files;
-import referenceFile.ReferenceFileFactory;
-import util.FileLoader;
+import co.uk.genesisengineers.apt.referenceFile.ReferenceFileFactory;
+import co.uk.genesisengineers.apt.util.FileLoader;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 
 public class FileNode {
     private int id;
@@ -26,6 +26,10 @@ public class FileNode {
         this.name = Files.getNameWithoutExtension(file.getName());
         this.id = id;
         this.path = parentPath+"/"+file.getName();
+        
+        if(name.equalsIgnoreCase(DirectoryNode.PATH_NAME)){
+            Logger.error("do not use file name path as this is used to specify path in assets :  "+path);
+        }
     }
 
     public static String getFileType(File file){

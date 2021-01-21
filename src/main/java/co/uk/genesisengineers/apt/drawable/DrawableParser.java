@@ -1,12 +1,12 @@
-package drawable;
+package co.uk.genesisengineers.apt.drawable;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-import referenceFile.ReferenceFileFactory;
-import resources.DirectoryNode;
-import resources.FileNode;
-import util.Logger;
+import co.uk.genesisengineers.apt.referenceFile.ReferenceFileFactory;
+import co.uk.genesisengineers.apt.resources.DirectoryNode;
+import co.uk.genesisengineers.apt.resources.FileNode;
+import co.uk.genesisengineers.apt.util.Logger;
 
 import java.io.*;
 import java.nio.charset.Charset;

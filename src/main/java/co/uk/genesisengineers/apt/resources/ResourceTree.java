@@ -1,7 +1,7 @@
-package resources;
+package co.uk.genesisengineers.apt.resources;
 
-import assets.AssetsManager;
-import referenceFile.ReferenceFileFactory;
+import co.uk.genesisengineers.apt.assets.AssetsManager;
+import co.uk.genesisengineers.apt.referenceFile.ReferenceFileFactory;
 
 import java.io.File;
 import java.nio.file.Path;

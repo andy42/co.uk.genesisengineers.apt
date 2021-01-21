@@ -1,11 +1,13 @@
-import assets.AssetsManager;
-import drawable.DrawableParser;
-import layout.LayoutParser;
-import referenceFile.ReferenceFileFactory;
-import resources.ResourceTree;
-import util.FileLoader;
-import util.Logger;
-import values.ValuesParser;
+package co.uk.genesisengineers.apt;
+
+import co.uk.genesisengineers.apt.assets.AssetsManager;
+import co.uk.genesisengineers.apt.drawable.DrawableParser;
+import co.uk.genesisengineers.apt.layout.LayoutParser;
+import co.uk.genesisengineers.apt.referenceFile.ReferenceFileFactory;
+import co.uk.genesisengineers.apt.resources.ResourceTree;
+import co.uk.genesisengineers.apt.util.FileLoader;
+import co.uk.genesisengineers.apt.util.Logger;
+import co.uk.genesisengineers.apt.values.ValuesParser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -71,21 +73,25 @@ public class Main {
         return resourcesDir;
     }
 
-    private static File getGeneratedJavaDir(File rootDir,String fileName ){
-        File resourcesDir = new File(rootDir.getAbsolutePath()+"/build/generated/java/"+fileName);
-        if(resourcesDir.exists() == false){
-            Logger.error("/build/generated/java/ does not exist");
+    private static void createDir(File rootDir, String path){
+        File dir = new File(rootDir.getAbsolutePath()+path);
+        if(dir.exists() == false){
+            Logger.info("create : "+path);
+            if(dir.mkdirs() == false){
+                Logger.error("creating "+path);
+            }
         }
-        //TODO: create folders if they do not exist
+    }
+
+    private static File getGeneratedJavaDir(File rootDir,String fileName ){
+        createDir(rootDir,"/build/generated/java" );
+        File resourcesDir = new File(rootDir.getAbsolutePath()+"/build/generated/java/"+fileName);
         return resourcesDir;
     }
 
     private static File getGeneratedKotlinDir(File rootDir,String fileName ) {
+        createDir(rootDir,"/build/generated/kotlin" );
         File resourcesDir = new File(rootDir.getAbsolutePath()+"/build/generated/kotlin/"+fileName);
-        if(resourcesDir.exists() == false){
-            Logger.error("/build/generated/kotlin/ does not exist");
-        }
-        //TODO: create folders if they do not exist
         return resourcesDir;
     }
 

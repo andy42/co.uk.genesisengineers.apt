@@ -1,4 +1,4 @@
-package assets;
+package co.uk.genesisengineers.apt.assets;
 
 public class Asset {
     private String name;
@@ -64,16 +64,20 @@ public class Asset {
 
 
             String[] pathArray = filePath.split("/");
+
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("@");
+            
             if(pathArray.length > 1){
-                StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.append("@");
                 for(int i= 0; i< (pathArray.length -1); i++){
                     stringBuilder.append(pathArray[i]+"/");
                 }
-                stringBuilder.append(name);
-                asset.assetId = stringBuilder.toString();
             }
-
+            else if (pathArray.length == 1){
+                stringBuilder.append(pathArray[0]+"/");
+            }
+            stringBuilder.append(name);
+            asset.assetId = stringBuilder.toString();
 
             return asset;
         }
